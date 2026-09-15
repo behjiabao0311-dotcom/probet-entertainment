@@ -187,18 +187,29 @@ async function loadNumbers(){
 const box=document.getElementById("numbers");
 const status=document.getElementById("status");
 
-const {data,error}=await supabase
-.from("entertainment_numbers")
-.select("number")
-.order("sort_order");
+let data,error;
 
-if(error){
+try{
+  const response=await fetch(
+    SUPABASE_URL+"/rest/v1/entertainment_numbers?select=number&order=sort_order",
+    {
+      headers:{
+        apikey:SUPABASE_KEY,
+        Authorization:"Bearer "+SUPABASE_KEY
+      }
+    }
+  );
 
-box.innerHTML="号码读取失败";
-status.innerText="数据库连接失败";
-console.log(error);
+  if(!response.ok){
+    throw new Error("HTTP "+response.status);
+  }
 
-return;
+  data=await response.json();
+
+}catch(e){
+
+  error=e;
+
 
 }
 
