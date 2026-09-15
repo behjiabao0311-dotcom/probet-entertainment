@@ -108,6 +108,12 @@ font-size:13px;
 color:#999;
 line-height:1.5
 }
+.status{
+text-align:center;
+font-size:13px;
+color:#888;
+margin-top:10px
+}
 </style>
 </head>
 
@@ -117,7 +123,7 @@ line-height:1.5
 
 <header>
 ProBet <span style="font-weight:normal">[娱乐版]</span>
-<div class="version">v1.0.0</div>
+<div class="version">v2.0.0</div>
 </header>
 
 <main>
@@ -132,7 +138,9 @@ ProBet <span style="font-weight:normal">[娱乐版]</span>
 
 <label>选择号码</label>
 
-<div class="numbers" id="numbers"></div>
+<div class="numbers" id="numbers">
+正在读取号码...
+</div>
 
 <label>演示金额</label>
 
@@ -146,6 +154,10 @@ MYR <span id="total">0.00</span>
 确认娱乐演示
 </button>
 
+<div class="status" id="status">
+正在连接数据库...
+</div>
+
 <div class="notice">
 本网站仅供娱乐及网页功能演示，不连接真实投注、彩票、博彩或支付系统。
 </div>
@@ -153,29 +165,44 @@ MYR <span id="total">0.00</span>
 </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+
+const consthttps://vqcygvhcgjwdydljajyq.supabase.co 
+const SUPABASE_KEY =sb_publishable_K7WCKtwLTiIBHzQVChh2WQ_skM0haeO
+  
+
+const supabase = window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
 
 let selected=[];
 let type="D";
+let numbers=[];
 
-let numbers=[
-"1234",
-"5678",
-"8888",
-"1010",
-"2026",
-"7777",
-"4321",
-"9999",
-"1122",
-"5566",
-"6688",
-"8899"
-];
+async function loadNumbers(){
 
-function showNumbers(){
+const box=document.getElementById("numbers");
+const status=document.getElementById("status");
 
-let box=document.getElementById("numbers");
+const {data,error}=await supabase
+.from("entertainment_numbers")
+.select("number")
+.order("sort_order");
+
+if(error){
+
+box.innerHTML="号码读取失败";
+status.innerText="数据库连接失败";
+console.log(error);
+
+return;
+
+}
+
+numbers=data.map(item=>item.number);
 
 box.innerHTML="";
 
@@ -184,7 +211,6 @@ numbers.forEach(function(num){
 let div=document.createElement("div");
 
 div.className="number";
-
 div.innerText=num;
 
 div.onclick=function(){
@@ -208,6 +234,8 @@ calculate();
 box.appendChild(div);
 
 });
+
+status.innerText="数据库连接成功";
 
 }
 
@@ -241,7 +269,6 @@ function confirmDemo(){
 if(selected.length===0){
 
 alert("请先选择号码");
-
 return;
 
 }
@@ -256,7 +283,7 @@ document.getElementById("total").innerText
 
 }
 
-showNumbers();
+loadNumbers();
 calculate();
 
 </script>
