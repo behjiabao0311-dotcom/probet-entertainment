@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProBet 娱乐版</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f4f6fa;
+color:#555
+}
+.app{
+max-width:800px;
+margin:auto;
+min-height:100vh;
+background:white
+}
+header{
+height:75px;
+display:flex;
+align-items:center;
+padding:0 20px;
+border-bottom:1px solid #ddd;
+color:#1976e8;
+font-size:26px;
+font-weight:bold
+}
+.version{
+margin-left:auto;
+font-size:18px
+}
+main{padding:25px}
+label{
+display:block;
+font-size:18px;
+margin:15px 0 7px 8px
+}
+select,input{
+width:100%;
+padding:15px;
+border:2px solid #bbb;
+border-radius:15px;
+font-size:19px;
+background:white
+}
+.types{
+display:flex;
+gap:10px;
+margin:10px 0
+}
+.type{
+padding:12px 22px;
+border:2px solid #ccc;
+border-radius:12px;
+cursor:pointer
+}
+.type.active{
+border-color:#1976e8;
+color:#1976e8;
+background:#eef6ff
+}
+.numbers{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px
+}
+.number{
+padding:15px 5px;
+text-align:center;
+border:2px solid #ddd;
+border-radius:12px;
+cursor:pointer;
+font-size:20px
+}
+.number.selected{
+border-color:#1976e8;
+background:#eef6ff;
+color:#1976e8
+}
+.total{
+margin-top:20px;
+padding:18px;
+border:3px solid #1976e8;
+border-radius:16px;
+text-align:center;
+font-size:25px;
+font-weight:bold;
+color:#1976e8
+}
+button{
+width:100%;
+margin-top:15px;
+padding:17px;
+border:0;
+border-radius:16px;
+background:#4caf50;
+color:white;
+font-size:21px;
+font-weight:bold
+}
+.notice{
+margin-top:20px;
+font-size:13px;
+color:#999;
+line-height:1.5
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+ProBet <span style="font-weight:normal">[娱乐版]</span>
+<div class="version">v1.0.0</div>
+</header>
+
+<main>
+
+<label>选择娱乐项目</label>
+
+<div class="types">
+<div class="type active" onclick="setType(this)">D</div>
+<div class="type" onclick="setType(this)">#</div>
+<div class="type" onclick="setType(this)">娱乐号码</div>
+</div>
+
+<label>选择号码</label>
+
+<div class="numbers" id="numbers"></div>
+
+<label>演示金额</label>
+
+<input id="amount" type="number" value="5" min="0">
+
+<div class="total">
+MYR <span id="total">0.00</span>
+</div>
+
+<button onclick="confirmDemo()">
+确认娱乐演示
+</button>
+
+<div class="notice">
+本网站仅供娱乐及网页功能演示，不连接真实投注、彩票、博彩或支付系统。
+</div>
+
+</main>
+</div>
+
+<script>
+
+let selected=[];
+let type="D";
+
+let numbers=[
+"1234",
+"5678",
+"8888",
+"1010",
+"2026",
+"7777",
+"4321",
+"9999",
+"1122",
+"5566",
+"6688",
+"8899"
+];
+
+function showNumbers(){
+
+let box=document.getElementById("numbers");
+
+box.innerHTML="";
+
+numbers.forEach(function(num){
+
+let div=document.createElement("div");
+
+div.className="number";
+
+div.innerText=num;
+
+div.onclick=function(){
+
+if(selected.includes(num)){
+
+selected=selected.filter(x=>x!==num);
+div.classList.remove("selected");
+
+}else{
+
+selected.push(num);
+div.classList.add("selected");
+
+}
+
+calculate();
+
+};
+
+box.appendChild(div);
+
+});
+
+}
+
+function setType(el){
+
+document.querySelectorAll(".type")
+.forEach(x=>x.classList.remove("active"));
+
+el.classList.add("active");
+
+type=el.innerText;
+
+}
+
+function calculate(){
+
+let amount=Number(
+document.getElementById("amount").value
+)||0;
+
+document.getElementById("total").innerText=
+(amount*selected.length).toFixed(2);
+
+}
+
+document.getElementById("amount")
+.addEventListener("input",calculate);
+
+function confirmDemo(){
+
+if(selected.length===0){
+
+alert("请先选择号码");
+
+return;
+
+}
+
+alert(
+"娱乐演示完成\n\n"+
+"项目："+type+
+"\n号码："+selected.join(", ")+
+"\n金额：MYR "+
+document.getElementById("total").innerText
+);
+
+}
+
+showNumbers();
+calculate();
+
+</script>
+
+</body>
+</html>
