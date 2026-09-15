@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProBet 管理后台</title>
+<style>
+body{margin:0;background:#f4f6fa;font-family:Arial,sans-serif;color:#444}
+.box{max-width:700px;margin:auto;background:white;min-height:100vh;padding:25px;box-sizing:border-box}
+h1{color:#1976e8}
+textarea{width:100%;height:220px;box-sizing:border-box;padding:15px;border:2px solid #ccc;border-radius:14px;font-size:18px}
+button{margin-top:15px;padding:14px 22px;border:0;border-radius:12px;background:#1976e8;color:white;font-size:18px}
+.msg{margin-top:18px;color:#2e7d32}
+</style>
+</head>
+
+<body>
+<div class="box">
+
+<h1>ProBet 娱乐版</h1>
+<h2>管理后台</h2>
+
+<p>号码管理</p>
+
+<textarea id="numbers"></textarea>
+
+<br>
+
+<button onclick="save()">保存号码</button>
+<button onclick="resetData()">恢复默认</button>
+
+<div class="msg" id="msg"></div>
+
+</div>
+
+<script>
+
+let defaultNumbers=[
+"1234",
+"5678",
+"8888",
+"1010",
+"2026",
+"7777",
+"4321",
+"9999"
+];
+
+let numbers=
+JSON.parse(localStorage.getItem("probetNumbers"))
+||defaultNumbers;
+
+document.getElementById("numbers").value=
+numbers.join("\n");
+
+function save(){
+
+numbers=document
+.getElementById("numbers")
+.value
+.split(/\s+/)
+.filter(x=>x);
+
+localStorage.setItem(
+"probetNumbers",
+JSON.stringify(numbers)
+);
+
+document.getElementById("msg").innerText=
+"保存成功";
+
+}
+
+function resetData(){
+
+localStorage.removeItem("probetNumbers");
+
+location.reload();
+
+}
+
+</script>
+
+</body>
+</html>
